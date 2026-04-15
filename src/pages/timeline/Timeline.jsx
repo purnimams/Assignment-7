@@ -4,50 +4,84 @@ import call from "../../assets/call.png";
 import video from "../../assets/video.png";
 import text from "../../assets/text.png";
 
-const icons = [call, video, text];
+const iconMap = {
+  Call: call,
+  Text: text,
+  Video: video
+};
 
 const Timeline = () => {
-  const [friends, setFriends] = useState([]);
+  const [timeline, setTimeline] = useState([]);
+  const [filter, setFilter] = useState("All");
 
+  // load data from localStorage
   useEffect(() => {
-    fetch("/friendsData.json")
-      .then(res => res.json())
-      .then(data => setFriends(data));
+    const storedData = JSON.parse(localStorage.getItem("timeline")) || [];
+    setTimeline(storedData);
   }, []);
+
+  // filter logic
+  const filteredData =
+    filter === "All"
+      ? timeline
+      : timeline.filter(item => item.type === filter);
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-10">
 
-      <h2 className="text-2xl font-bold mb-6">Timeline</h2>
+      {/* HEADING */}
+      <h2 className="text-3xl font-bold mb-6">Timeline</h2>
 
-      <div className="relative border-l-2 border-gray-200 pl-6 space-y-6">
+      {/* FILTER */}
+      <div className="mb-6">
+        <select
+          className="border px-4 py-2 rounded-lg shadow-sm"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="All">All</option>
+          <option value="Call">Call</option>
+          <option value="Text">Text</option>
+          <option value="Video">Video</option>
+        </select>
+      </div>
 
-        {friends.map((friend, index) => (
+      {/* EMPTY STATE */}
+      {filteredData.length === 0 && (
+        <p className="text-gray-500 text-center mt-10">
+          No interactions yet 🚫
+        </p>
+      )}
+
+      {/* TIMELINE LIST */}
+      <div className="space-y-4">
+
+        {filteredData.map(item => (
           <div
-            key={friend.id}
-            className="bg-white p-4 rounded-xl shadow flex items-start gap-4"
+            key={item.id}
+            className="bg-white p-4 rounded-xl shadow flex items-center gap-4 hover:shadow-md transition"
           >
 
-            {/* ICON LEFT */}
-            <img
-              src={icons[index % icons.length]}
-              className="w-5 h-5 mt-1"
-              alt="icon"
-            />
+            {/* ICON */}
+            <div>
+              <img
+                src={iconMap[item.type]}
+                alt={item.type}
+                className="w-5 h-5"
+              />
+            </div>
 
             {/* TEXT */}
             <div className="flex-1">
-              <h3 className="font-semibold">{friend.name}</h3>
+              <h3 className="font-semibold text-lg">
+                {item.type} with {item.name}
+              </h3>
               <p className="text-sm text-gray-500">
-                Last contacted {friend.days_since_contact} days ago
+                {item.date}
               </p>
             </div>
 
-            {/* RIGHT DATE */}
-            <span className="text-xs text-gray-400">
-              {friend.next_due_date}
-            </span>
-
+            
           </div>
         ))}
 

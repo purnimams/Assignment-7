@@ -6,9 +6,9 @@ const FriendCard = ({ friend }) => {
   const { id, name, picture, days_since_contact, tags, status } = friend;
 
   const statusColor = {
-    "overdue": "bg-red-100 text-red-600",
-    "almost due": "bg-yellow-100 text-yellow-600",
-    "on-track": "bg-green-100 text-green-600"
+    "overdue": "bg-red-600 text-white",
+    "almost due": "bg-yellow-600 text-white",
+    "on-track": "bg-green-600 text-white"
   };
 
   return (
