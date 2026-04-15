@@ -56,11 +56,6 @@ ConnectMate is a smart friendship tracking web application that helps users mana
 
 ---
 
-## 📸 Screenshot
-
-(Add your project screenshot here)
-
----
 
 ## ⚙️ Installation
 
